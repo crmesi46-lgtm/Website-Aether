@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER - Portfolio</title>
+    <style>
+        /* Reset dasar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: auto;
+        }
+
+        /* Hero section dengan planet */
+        .intro-section {
+            position: relative;
+            height: 150vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .planet-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        
+        .planet-wrapper.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .planet-sphere {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(500px, 70vw);
+            height: min(500px, 70vw);
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #4a90e2, #1e3a8a, #0a0e27);
+            box-shadow: 
+                0 0 80px rgba(74, 144, 226, 0.6),
+                inset -30px -30px 60px rgba(0, 0, 0, 0.5),
+                inset 20px 20px 40px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease-out;
+        }
+
+        /* efek cahaya planet */
+        .planet-sphere::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 25%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent);
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+
+        .glow-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(520px, 72vw);
+            height: min(520px, 72vw);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.3), transparent 70%);
+            filter: blur(40px);
+            transition: opacity 0.3s ease-out;
+        }
+
+        .main-text {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .main-text h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #4a90e2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .main-text p {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+        }
+
+        /* partikel floating */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.5s ease-out;
+        }
+
+        /* bg nebula */
+        #nebula {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(74, 144, 226, 0.15), transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.1), transparent 50%),
+                #000;
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Section pertama - content */
+        .content-section {
+            position: relative;
+            min-height: 120vh;
+            padding: 10rem 5%;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .bg-stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 85%, white, transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            opacity: 0.4;
+        }
+
+        .grid-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(74, 144, 226, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(74, 144, 226, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+            opacity: 0.3;
+        }
+
+        .wrapper {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            z-index: 1;
+        }
+
+        .text-block {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(6px);
+            transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .text-block.show {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .text-block h2 {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .text-block p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Section kedua - capabilities */
+        .capabilities-section {
+            position: relative;
+            min-height: 120vh;
+            padding: 10rem 5%;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .progress-bar {
+            position: fixed;
+            right: 2rem;
+            top: 20%;
+            width: 2px;
+            height: 60%;
+            background: rgba(74, 144, 226, 0.2);
+            z-index: 100;
+            display: none;
+        }
+        
+        @media (min-width: 1024px) {
+            .progress-bar {
+                display: block;
+            }
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to bottom, #4a90e2, #60a5fa);
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.8);
+            transition: height 0.1s ease-out;
+        }
+
+        .orbit-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            border: 1px solid rgba(74, 144, 226, 0.1);
+            border-radius: 50%;
+            transition: transform 0.3s ease-out;
+        }
+
+        .orbit-circle::before,
+        .orbit-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(74, 144, 226, 0.05);
+            border-radius: 50%;
+        }
+
+        .orbit-circle::before {
+            width: 600px;
+            height: 600px;
+        }
+
+        .orbit-circle::after {
+            width: 1000px;
+            height: 1000px;
+        }
+
+        .cards-grid {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            z-index: 1;
+        }
+
+        .card {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: rotateX(5deg) scale(0.96);
+            transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .card.show {
+            opacity: 1;
+            /* transform dihandle oleh JavaScript untuk smooth drift effect */
+        }
+
+        .card:hover {
+            border-color: rgba(74, 144, 226, 0.5);
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #60a5fa;
+        }
+
+        .card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* tech stack orbit */
+        .tech-section {
+            position: relative;
+            min-height: 120vh;
+            padding: 10rem 5%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s ease-out;
+        }
+
+        .section-title.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .orbit-container {
+            position: relative;
+            width: min(600px, 90vw);
+            height: min(600px, 90vw);
+            margin: 0 auto;
+        }
+
+        .tech-item {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: rgba(20, 20, 40, 0.9);
+            border: 2px solid rgba(74, 144, 226, 0.4);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease-out;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            padding: 8px;
+            line-height: 1.2;
+        }
+
+        .tech-item:hover {
+            background: rgba(74, 144, 226, 0.25);
+            border-color: rgba(74, 144, 226, 0.7);
+            transform: scale(1.15);
+            box-shadow: 0 8px 24px rgba(74, 144, 226, 0.4);
+        }
+        
+        /* warna per tech */
+        .t-react { border-color: rgba(97, 218, 251, 0.5); }
+        .t-react:hover { border-color: rgba(97, 218, 251, 0.8); background: rgba(97, 218, 251, 0.15); }
+        
+        .t-nextjs { border-color: rgba(255, 255, 255, 0.3); }
+        .t-nextjs:hover { border-color: rgba(255, 255, 255, 0.6); }
+        
+        .t-tailwind { border-color: rgba(56, 189, 248, 0.5); }
+        .t-tailwind:hover { border-color: rgba(56, 189, 248, 0.8); background: rgba(56, 189, 248, 0.15); }
+        
+        .t-nodejs { border-color: rgba(104, 199, 76, 0.5); }
+        .t-nodejs:hover { border-color: rgba(104, 199, 76, 0.8); background: rgba(104, 199, 76, 0.15); }
+        
+        .t-docker { border-color: rgba(33, 150, 243, 0.5); }
+        .t-docker:hover { border-color: rgba(33, 150, 243, 0.8); background: rgba(33, 150, 243, 0.15); }
+        
+        .t-framer { border-color: rgba(255, 255, 255, 0.3); }
+        .t-framer:hover { border-color: rgba(255, 255, 255, 0.6); }
+        
+        .t-graphql { border-color: rgba(233, 30, 99, 0.5); }
+        .t-graphql:hover { border-color: rgba(233, 30, 99, 0.8); background: rgba(233, 30, 99, 0.15); }
+        
+        .t-mongodb { border-color: rgba(76, 175, 80, 0.5); }
+        .t-mongodb:hover { border-color: rgba(76, 175, 80, 0.8); background: rgba(76, 175, 80, 0.15); }
+        
+        .t-firebase { border-color: rgba(255, 152, 0, 0.5); }
+        .t-firebase:hover { border-color: rgba(255, 152, 0, 0.8); background: rgba(255, 152, 0, 0.15); }
+        
+        .t-aws { border-color: rgba(255, 153, 0, 0.5); }
+        .t-aws:hover { border-color: rgba(255, 153, 0, 0.8); background: rgba(255, 153, 0, 0.15); }
+
+        .orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px dashed rgba(74, 144, 226, 0.15);
+            border-radius: 50%;
+        }
+
+        /* projects section */
+        .projects-section {
+            position: relative;
+            min-height: 300vh;
+            padding: 10rem 5%;
+            background: #000;
+            isolation: isolate;
+            z-index: 5;
+        }
+
+        .projects-title {
+            text-align: center;
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            margin-bottom: 8rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s ease-out;
+        }
+
+        .projects-title.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project {
+            position: relative;
+            margin-bottom: 15rem;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            isolation: isolate;
+        }
+
+        .project-box {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+            position: relative;
+            z-index: 15;
+            padding: 2rem;
+            border-radius: 20px;
+        }
+        
+        @media (min-width: 769px) {
+            .project-box {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+            }
+        }
+
+        .visual-box {
+            width: 100%;
+            position: relative;
+        }
+
+        .proj-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+            color: #60a5fa;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.7s ease-out;
+        }
+
+        .proj-title.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .img-box {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            opacity: 0;
+            clip-path: inset(0 100% 0 0);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: #0a0a0a;
+            z-index: 10;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            width: 100%;
+        }
+        
+        @media (min-width: 769px) {
+            .visual-box {
+                width: auto;
+            }
+            
+            .proj-title {
+                text-align: left;
+            }
+        }
+
+        .img-box.show {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+        }
+
+        .proj-img {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #1e3a8a, #4a90e2);
+            border-radius: 16px;
+            transform: scale(1.1);
+            transition: transform 1s ease-out;
+            position: relative;
+            z-index: 11;
+            isolation: isolate;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img-box.show .proj-img {
+            transform: scale(1);
+        }
+
+        /* mockup nebula */
+        .nebula-bg {
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+        }
+        
+        .nebula-layout {
+            width: 90%;
+            height: 85%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .nebula-nav {
+            height: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            width: 80px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+        }
+        
+        .nebula-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .stat-num {
+            width: 60%;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+        }
+        
+        .stat-txt {
+            width: 80%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+        
+        .chart-box {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bars {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            height: 60%;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        
+        .bar {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .bar:nth-child(1) { height: 40%; }
+        .bar:nth-child(2) { height: 70%; }
+        .bar:nth-child(3) { height: 55%; }
+        .bar:nth-child(4) { height: 85%; }
+        .bar:nth-child(5) { height: 65%; }
+        .bar:nth-child(6) { height: 90%; }
+        
+        /* mockup stellar */
+        .stellar-bg {
+            background: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
+        }
+        
+        .stellar-layout {
+            width: 90%;
+            height: 85%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .stellar-header {
+            height: 45px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 6px;
+        }
+        
+        .search {
+            flex: 1;
+            max-width: 300px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin: 0 20px;
+        }
+        
+        .cart {
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
+        
+        .products {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .product {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .prod-img {
+            height: 60%;
+            background: rgba(255, 255, 255, 0.18);
+        }
+        
+        .prod-data {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .prod-name {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+        
+        .prod-price {
+            width: 50%;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 4px;
+        }
+        
+        /* mockup orbit */
+        .orbit-bg {
+            background: linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%);
+        }
+        
+        .orbit-layout {
+            width: 90%;
+            height: 85%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            height: 80px;
+        }
+        
+        .metric {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .metric-lbl {
+            width: 70%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 3px;
+        }
+        
+        .charts {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+        }
+        
+        .big-chart {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            padding: 15px;
+        }
+        
+        .line-data {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 70%;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .point {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .point:nth-child(1) { height: 35%; }
+        .point:nth-child(2) { height: 45%; }
+        .point:nth-child(3) { height: 60%; }
+        .point:nth-child(4) { height: 50%; }
+        .point:nth-child(5) { height: 75%; }
+        .point:nth-child(6) { height: 85%; }
+        .point:nth-child(7) { height: 70%; }
+        .point:nth-child(8) { height: 90%; }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .side-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .side-item {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .desc-box {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out 0.3s;
+            width: 100%;
+            position: relative;
+            z-index: 25;
+        }
+
+        .desc-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (min-width: 769px) {
+            .desc-box {
+                width: auto;
+                transform: translateX(-30px);
+            }
+            
+            .desc-box.show {
+                transform: translateX(0);
+            }
+        }
+
+        .desc-box p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+        }
+
+        .tags {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.5rem 1rem;
+            background: rgba(74, 144, 226, 0.1);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #60a5fa;
+        }
+
+        .flash {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.15), transparent 30%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* responsive mobile */
+        @media (max-width: 768px) {
+            .main-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .main-text p {
+                font-size: 1rem;
+            }
+
+            .planet-sphere {
+                width: 250px;
+                height: 250px;
+            }
+
+            .glow-effect {
+                width: 270px;
+                height: 270px;
+            }
+
+            .text-block h2 {
+                font-size: 2rem;
+            }
+
+            .text-block p {
+                font-size: 1rem;
+            }
+
+            .project-box {
+                padding: 1rem;
+                gap: 2rem;
+            }
+
+            .proj-img {
+                height: 250px;
+            }
+            
+            .img-box {
+                margin-bottom: 1.5rem;
+            }
+
+            .orbit-container {
+                width: 90vw;
+                height: 90vw;
+            }
+
+            .tech-item {
+                width: 55px;
+                height: 55px;
+                padding: 6px;
+                font-size: 0.6rem;
+            }
+
+            .content-section,
+            .capabilities-section,
+            .tech-section {
+                padding: 5rem 5%;
+            }
+            
+            .projects-section {
+                padding: 5rem 3%;
+            }
+            
+            .project {
+                margin-bottom: 8rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .card h3 {
+                font-size: 1.4rem;
+            }
+
+            .card p {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- partikel efek -->
+    <div id="particles"></div>
+
+    <!-- bg nebula -->
+    <div id="nebula"></div>
+
+    <!-- flash effect -->
+    <div class="flash" id="flash"></div>
+
+    <!-- intro hero -->
+    <section class="intro-section" id="intro">
+        <div class="planet-wrapper">
+            <div class="glow-effect" id="glow"></div>
+            <div class="planet-sphere" id="planet"></div>
+        </div>
+        <div class="main-text" id="mainText">
+            <h1>AETHER</h1>
+            <p>Perjalanan Melalui Inovasi</p>
+        </div>
+    </section>
+
+    <!-- content 1 -->
+    <section class="content-section">
+        <div class="bg-stars">
+            <div class="stars" id="stars"></div>
+            <div class="grid-bg" id="grid"></div>
+        </div>
+
+        <div class="wrapper">
+            <div class="text-block">
+                <h2>Menciptakan Pengalaman Digital Terbaik</h2>
+                <p>Setiap pixel menceritakan sebuah kisah. Setiap interaksi menciptakan kenangan yang berkesan. Kami membangun pengalaman yang melampaui yang biasa, menggabungkan teknologi terdepan dengan desain yang berpusat pada manusia.</p>
+            </div>
+
+            <div class="text-block">
+                <h2>Inovasi Didorong oleh Tujuan</h2>
+                <p>Di dunia yang terus berubah, kami tetap berpijak pada misi inti kami: menciptakan solusi yang bermakna. Pendekatan kami menggabungkan pemikiran strategis dengan keunggulan teknis untuk menghadirkan hasil yang luar biasa.</p>
+            </div>
+
+            <div class="text-block">
+                <h2>Melampaui Batas Kemungkinan</h2>
+                <p>Masa depan bukan sesuatu yang kami prediksi—tetapi sesuatu yang kami ciptakan. Bergabunglah dengan kami dalam mendorong batasan dan mendefinisikan ulang apa yang mungkin di ranah digital.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="vignette" id="vignette"></div>
+
+    <!-- progress indicator -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- capabilities -->
+    <section class="capabilities-section">
+        <div class="orbit-circle" id="orbitRing"></div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Visi Strategis</h3>
+                <p>Kami tidak hanya membangun produk—kami merancang pengalaman yang selaras dengan tujuan jangka panjang dan posisi pasar Anda untuk mencapai kesuksesan berkelanjutan.</p>
+            </div>
+
+            <div class="card">
+                <h3>Keunggulan Teknis</h3>
+                <p>Memanfaatkan framework modern dan praktik terbaik untuk menghadirkan solusi yang tangguh, skalabel, dan tahan terhadap ujian waktu dengan performa maksimal.</p>
+            </div>
+
+            <div class="card">
+                <h3>Desain Berpusat pada Pengguna</h3>
+                <p>Setiap keputusan didasarkan pada riset pengguna mendalam dan wawasan perilaku, memastikan pengalaman yang intuitif, menyenangkan, dan bermakna bagi setiap pengguna.</p>
+            </div>
+
+            <div class="card">
+                <h3>Obsesi Performa</h3>
+                <p>Kecepatan adalah kunci. Kami mengoptimalkan setiap aspek untuk menghadirkan pengalaman yang sangat cepat dan responsif, menjaga pengguna tetap terlibat dan puas.</p>
+            </div>
+
+            <div class="card">
+                <h3>Proses Kolaboratif</h3>
+                <p>Visi Anda, keahlian kami. Kami bekerja berdampingan dengan tim Anda untuk mewujudkan ide menjadi kenyataan melalui komunikasi yang transparan dan efektif.</p>
+            </div>
+
+            <div class="card">
+                <h3>Inovasi Berkelanjutan</h3>
+                <p>Lanskap digital berkembang dengan cepat. Kami tetap unggul dengan tren terkini untuk memastikan produk Anda selalu berada di garis depan teknologi dan inovasi.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- tech stack -->
+    <section class="tech-section">
+        <h2 class="section-title">Ekosistem Teknologi</h2>
+        
+        <div class="orbit-container" id="techOrbit">
+            <svg class="orbit-ring" width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet">
+                <circle cx="300" cy="300" r="250" fill="none" stroke="rgba(74, 144, 226, 0.15)" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="300" cy="300" r="180" fill="none" stroke="rgba(74, 144, 226, 0.15)" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="300" cy="300" r="110" fill="none" stroke="rgba(74, 144, 226, 0.15)" stroke-width="1" stroke-dasharray="5,5"/>
+            </svg>
+            
+            <div class="tech-item t-react" data-orbit="outer" data-angle="0">React</div>
+            <div class="tech-item t-nextjs" data-orbit="outer" data-angle="60">Next.js</div>
+            <div class="tech-item t-tailwind" data-orbit="outer" data-angle="120">Tailwind</div>
+            <div class="tech-item t-nodejs" data-orbit="outer" data-angle="180">Node.js</div>
+            <div class="tech-item t-docker" data-orbit="outer" data-angle="240">Docker</div>
+            <div class="tech-item t-framer" data-orbit="outer" data-angle="300">Framer</div>
+            
+            <div class="tech-item t-graphql" data-orbit="middle" data-angle="30">GraphQL</div>
+            <div class="tech-item t-mongodb" data-orbit="middle" data-angle="150">MongoDB</div>
+            <div class="tech-item t-firebase" data-orbit="middle" data-angle="270">Firebase</div>
+            
+            <div class="tech-item t-aws" data-orbit="inner" data-angle="0">AWS</div>
+            <div class="tech-item t-docker" data-orbit="inner" data-angle="180">Docker</div>
+        </div>
+    </section>
+
+    <!-- projects -->
+    <section class="projects-section">
+        <h2 class="projects-title">Proyek Unggulan</h2>
+
+        <div class="project">
+            <div class="project-box">
+                <div class="visual-box">
+                    <h3 class="proj-title">Platform Nebula</h3>
+                    <div class="img-box">
+                        <div class="proj-img nebula-bg">
+                            <div class="nebula-layout">
+                                <div class="nebula-nav">
+                                    <div class="nav-btn"></div>
+                                    <div class="nav-btn"></div>
+                                    <div class="nav-btn"></div>
+                                </div>
+                                <div class="nebula-grid">
+                                    <div class="stat-box">
+                                        <div class="stat-num"></div>
+                                        <div class="stat-txt"></div>
+                                    </div>
+                                    <div class="stat-box">
+                                        <div class="stat-num"></div>
+                                        <div class="stat-txt"></div>
+                                    </div>
+                                    <div class="stat-box">
+                                        <div class="stat-num"></div>
+                                        <div class="stat-txt"></div>
+                                    </div>
+                                    <div class="chart-box">
+                                        <div class="bars">
+                                            <div class="bar"></div>
+                                            <div class="bar"></div>
+                                            <div class="bar"></div>
+                                            <div class="bar"></div>
+                                            <div class="bar"></div>
+                                            <div class="bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="desc-box">
+                    <p>Platform SaaS revolusioner yang mentransformasi cara perusahaan mengelola aset digital mereka. Dibangun dengan teknologi terdepan dan dirancang untuk skalabilitas tinggi serta performa optimal.</p>
+                    <div class="tags">
+                        <span class="tag">React</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">AWS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-box">
+                <div class="visual-box">
+                    <h3 class="proj-title">Stellar Commerce</h3>
+                    <div class="img-box">
+                        <div class="proj-img stellar-bg">
+                            <div class="stellar-layout">
+                                <div class="stellar-header">
+                                    <div class="logo"></div>
+                                    <div class="search"></div>
+                                    <div class="cart"></div>
+                                </div>
+                                <div class="products">
+                                    <div class="product">
+                                        <div class="prod-img"></div>
+                                        <div class="prod-data">
+                                            <div class="prod-name"></div>
+                                            <div class="prod-price"></div>
+                                        </div>
+                                    </div>
+                                    <div class="product">
+                                        <div class="prod-img"></div>
+                                        <div class="prod-data">
+                                            <div class="prod-name"></div>
+                                            <div class="prod-price"></div>
+                                        </div>
+                                    </div>
+                                    <div class="product">
+                                        <div class="prod-img"></div>
+                                        <div class="prod-data">
+                                            <div class="prod-name"></div>
+                                            <div class="prod-price"></div>
+                                        </div>
+                                    </div>
+                                    <div class="product">
+                                        <div class="prod-img"></div>
+                                        <div class="prod-data">
+                                            <div class="prod-name"></div>
+                                            <div class="prod-price"></div>
+                                        </div>
+                                    </div>
+                                    <div class="product">
+                                        <div class="prod-img"></div>
+                                        <div class="prod-data">
+                                            <div class="prod-name"></div>
+                                            <div class="prod-price"></div>
+                                        </div>
+                                    </div>
+                                    <div class="product">
+                                        <div class="prod-img"></div>
+                                        <div class="prod-data">
+                                            <div class="prod-name"></div>
+                                            <div class="prod-price"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="desc-box">
+                    <p>Pengalaman e-commerce generasi berikutnya dengan rekomendasi berbasis AI dan alur checkout yang seamless. Meningkatkan tingkat konversi hingga 340% dan kepuasan pelanggan secara signifikan.</p>
+                    <div class="tags">
+                        <span class="tag">Next.js</span>
+                        <span class="tag">Stripe</span>
+                        <span class="tag">Tailwind</span>
+                        <span class="tag">Vercel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-box">
+                <div class="visual-box">
+                    <h3 class="proj-title">Orbit Analytics</h3>
+                    <div class="img-box">
+                        <div class="proj-img orbit-bg">
+                            <div class="orbit-layout">
+                                <div class="metrics">
+                                    <div class="metric">
+                                        <div class="metric-lbl"></div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-lbl"></div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-lbl"></div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-lbl"></div>
+                                    </div>
+                                </div>
+                                <div class="charts">
+                                    <div class="big-chart">
+                                        <div class="line-data">
+                                            <div class="point"></div>
+                                            <div class="point"></div>
+                                            <div class="point"></div>
+                                            <div class="point"></div>
+                                            <div class="point"></div>
+                                            <div class="point"></div>
+                                            <div class="point"></div>
+                                            <div class="point"></div>
+                                        </div>
+                                    </div>
+                                    <div class="sidebar">
+                                        <div class="side-box">
+                                            <div class="side-item"></div>
+                                            <div class="side-item"></div>
+                                        </div>
+                                        <div class="side-box">
+                                            <div class="side-item"></div>
+                                            <div class="side-item"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="desc-box">
+                    <p>Platform visualisasi data real-time yang membantu bisnis membuat keputusan berdasarkan informasi akurat. Dashboard yang indah bertemu dengan wawasan yang powerful untuk pertumbuhan bisnis.</p>
+                    <div class="tags">
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">D3.js</span>
+                        <span class="tag">GraphQL</span>
+                        <span class="tag">MongoDB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // bikin partikel
+        const particlesEl = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            particlesEl.appendChild(p);
+        }
+
+        // variabel scroll
+        let velocity = 0;
+        let lastY = window.scrollY;
+        let updating = false;
+
+        // fungsi utama scroll
+        function handleScroll() {
+            const y = window.scrollY;
+            const winH = window.innerHeight;
+            velocity = Math.abs(y - lastY);
+            lastY = y;
+
+            // intro effects
+            const intro = document.getElementById('intro');
+            const introH = intro.offsetHeight;
+            const progress = Math.min(y / introH, 1);
+
+            const planetEl = document.getElementById('planet');
+            const planetWrapper = document.querySelector('.planet-wrapper');
+            const glowEl = document.getElementById('glow');
+            const textEl = document.getElementById('mainText');
+            const nebulaEl = document.getElementById('nebula');
+            const particles = document.querySelectorAll('.particle');
+
+            // hide planet setelah intro
+            if (y > introH) {
+                planetWrapper.classList.add('hidden');
+            } else {
+                planetWrapper.classList.remove('hidden');
+            }
+
+            // zoom planet 0-20%
+            if (progress <= 0.2) {
+                const zoomProg = progress / 0.2;
+                const scale = 1 + (zoomProg * 0.08);
+                const rotate = zoomProg * 5;
+                planetEl.style.transform = `translate(-50%, -50%) scale(${scale}) rotate(${rotate}deg)`;
+                glowEl.style.opacity = 0.5 + (zoomProg * 0.3);
+            }
+
+            // fade text 20-40%
+            if (progress > 0.2 && progress <= 0.4) {
+                const fadeProg = (progress - 0.2) / 0.2;
+                textEl.style.opacity = 1 - fadeProg;
+                const blur = fadeProg * 4;
+                planetEl.style.filter = `blur(${blur}px)`;
+                
+                // partikel naik
+                particles.forEach((p, idx) => {
+                    p.style.opacity = fadeProg;
+                    p.style.transform = `translateY(-${fadeProg * (50 + idx * 2)}px)`;
+                });
+            }
+
+            // dissolve ke nebula 40-60%
+            if (progress > 0.4 && progress <= 0.6) {
+                const dissolveProg = (progress - 0.4) / 0.2;
+                planetEl.style.opacity = 1 - dissolveProg;
+                nebulaEl.style.opacity = dissolveProg;
+            }
+
+            // section 1 parallax
+            const sec1 = document.querySelector('.content-section');
+            if (sec1) {
+                const sec1Top = sec1.offsetTop;
+                const sec1H = sec1.offsetHeight;
+                const sec1Prog = (y - sec1Top) / sec1H;
+
+                const starsEl = document.getElementById('stars');
+                const gridEl = document.getElementById('grid');
+
+                if (starsEl) starsEl.style.transform = `translateY(${sec1Prog * 30}%)`;
+                if (gridEl) gridEl.style.transform = `translateY(${sec1Prog * 60}%)`;
+
+                // reveal text
+                const texts = sec1.querySelectorAll('.text-block');
+                texts.forEach(txt => {
+                    const rect = txt.getBoundingClientRect();
+                    if (rect.top < winH * 0.75) {
+                        txt.classList.add('show');
+                    }
+                });
+
+                // vignette exit
+                if (sec1Prog > 0.8) {
+                    const vigProg = (sec1Prog - 0.8) / 0.2;
+                    document.getElementById('vignette').style.opacity = vigProg * 0.4;
+                }
+            }
+
+            // section 2 capabilities
+            const sec2 = document.querySelector('.capabilities-section');
+            if (sec2) {
+                const sec2Top = sec2.offsetTop;
+                const sec2H = sec2.offsetHeight;
+                const sec2Prog = (y - sec2Top) / sec2H;
+
+                // progress bar
+                const progBar = document.getElementById('progressBar');
+                if (progBar && y > sec2Top && y < sec2Top + sec2H) {
+                    progBar.style.height = (sec2Prog * 100) + '%';
+                }
+
+                // cards drift
+                const cards = sec2.querySelectorAll('.card');
+                cards.forEach((card, idx) => {
+                    const rect = card.getBoundingClientRect();
+                    if (rect.top < winH * 0.8) {
+                        card.classList.add('show');
+                    }
+                    
+                    const drift = Math.sin(sec2Prog * Math.PI + idx) * 3;
+                    
+                    if (card.classList.contains('show')) {
+                        // Apply smooth floating drift effect
+                        card.style.transform = `translateY(${drift}px) rotateX(0) scale(1)`;
+                    } else {
+                        // Reset to initial state
+                        card.style.transform = `rotateX(5deg) scale(0.96)`;
+                    }
+                });
+
+                // orbit rotation
+                const orbitEl = document.getElementById('orbitRing');
+                if (orbitEl) {
+                    const rotation = sec2Prog * 360;
+                    orbitEl.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+                }
+            }
+
+            // section 3 tech orbit
+            const sec3 = document.querySelector('.tech-section');
+            if (sec3) {
+                const sec3Top = sec3.offsetTop;
+                const sec3H = sec3.offsetHeight;
+                const sec3Prog = (y - sec3Top) / sec3H;
+
+                const title = sec3.querySelector('.section-title');
+                const rect = title?.getBoundingClientRect();
+                if (rect && rect.top < winH * 0.8) {
+                    title.classList.add('show');
+                }
+
+                // orbit tech dengan gravitasi
+                const techItems = sec3.querySelectorAll('.tech-item');
+                const container = document.getElementById('techOrbit');
+                const containerW = container ? container.offsetWidth : 600;
+                const centerX = containerW / 2;
+                const centerY = containerW / 2;
+                const logoSz = window.innerWidth <= 768 ? 27.5 : 35;
+                
+                techItems.forEach(item => {
+                    const orbit = item.dataset.orbit;
+                    const angle = parseFloat(item.dataset.angle);
+                    const radiusMult = orbit === 'outer' ? 0.417 : orbit === 'middle' ? 0.3 : 0.183;
+                    const radius = containerW * radiusMult;
+                    
+                    const speedMult = 1 + (velocity * 0.02);
+                    const rad = (angle + (sec3Prog * 360 * speedMult)) * (Math.PI / 180);
+                    
+                    const x = centerX + Math.cos(rad) * radius - logoSz;
+                    const y = centerY + Math.sin(rad) * radius - logoSz;
+                    
+                    // gravitasi ke tengah
+                    const pull = Math.min(velocity * 0.5, 20);
+                    const pullX = (centerX - x - logoSz) * (pull / radius);
+                    const pullY = (centerY - y - logoSz) * (pull / radius);
+                    
+                    item.style.left = (x + pullX) + 'px';
+                    item.style.top = (y + pullY) + 'px';
+                });
+
+                // bg blur saat scroll cepat
+                if (velocity > 5) {
+                    nebulaEl.style.filter = 'blur(2px)';
+                } else {
+                    nebulaEl.style.filter = 'blur(0)';
+                }
+            }
+
+            // section 4 projects
+            const sec4 = document.querySelector('.projects-section');
+            if (sec4) {
+                const sec4Top = sec4.offsetTop;
+                
+                // hide nebula di section 4
+                if (y > sec4Top - winH) {
+                    nebulaEl.style.opacity = 0;
+                    nebulaEl.style.display = 'none';
+                }
+                
+                // flash saat masuk
+                if (y > sec4Top - winH && y < sec4Top) {
+                    const enterProg = (y - (sec4Top - winH)) / winH;
+                    const flashEl = document.getElementById('flash');
+                    if (enterProg < 0.3) {
+                        flashEl.style.opacity = 0.3;
+                        setTimeout(() => flashEl.style.opacity = 0, 300);
+                    }
+                }
+
+                // title projects
+                const projTitle = sec4.querySelector('.projects-title');
+                const tRect = projTitle?.getBoundingClientRect();
+                if (tRect && tRect.top < winH * 0.8) {
+                    projTitle.classList.add('show');
+                }
+
+                // reveal projects
+                const projects = sec4.querySelectorAll('.project');
+                projects.forEach(proj => {
+                    const pRect = proj.getBoundingClientRect();
+                    const imgBox = proj.querySelector('.img-box');
+                    const descBox = proj.querySelector('.desc-box');
+                    const projT = proj.querySelector('.proj-title');
+                    
+                    if (pRect.top < winH * 0.7) {
+                        projT?.classList.add('show');
+                        imgBox?.classList.add('show');
+                        descBox?.classList.add('show');
+                    }
+                });
+            } else {
+                // tampilkan nebula kalo bukan section 4
+                if (y < (sec4?.offsetTop - winH || 99999)) {
+                    nebulaEl.style.display = 'block';
+                }
+            }
+
+            updating = false;
+        }
+
+        function reqUpdate() {
+            if (!updating) {
+                requestAnimationFrame(handleScroll);
+                updating = true;
+            }
+        }
+
+        window.addEventListener('scroll', reqUpdate);
+        
+        // init
+        handleScroll();
+    </script>
+</body>
+</html>
